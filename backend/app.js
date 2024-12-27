@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config(); 
 const userRoutes = require('./routes/userRoutes');
-
+const documentRoutes = require('./routes/documentRoutes');
 
 const app = express();
 const User = require('./models/User');
@@ -26,8 +26,9 @@ app.get('/', (req, res) =>{
 });
 
 app.use('/api/users', userRoutes);
+app.use('/api/documents', documentRoutes);
 
-
-app.listen(8800, () => {
-  console.log(`Server running on port 8800 🚀`);
+const PORT = process.env.PORT || 8800;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT} 🚀`);
 });
