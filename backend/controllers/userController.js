@@ -177,4 +177,13 @@ const updateUser = async (req, res, next) => {
     }
 };
 
-module.exports = { createUser , login ,logout, getAllUsers , getUserById , deleteUser , updateUser };  
+//function to assign roles - Hierarchy Management
+const assignRole = async (req, res, next) => {
+
+}
+
+//function to get team members - Hierarchy Management
+const viewHierarchyTree = async (req, res, next) => {
+
+}
+module.exports = { createUser , login ,logout, getAllUsers , getUserById , deleteUser , updateUser , assignRole, viewHierarchyTree };  
