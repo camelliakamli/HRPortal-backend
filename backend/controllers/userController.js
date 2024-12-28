@@ -2,8 +2,10 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const { generateToken } = require("../middlewares/generateToken");
+const createError = require('../utils/error');
+
 //FUNCTION TO CREATE USER 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
     try {
         const {
             first_name,
@@ -51,12 +53,13 @@ const createUser = async (req, res) => {
         });
     } catch (error) {
         console.error("Error creating user:", error);
-        res.status(500).json({ error: "Internal server error." });
+        //res.status(500).json({ error: "Internal server error." });
+        next(error);
     }
 };
 
 //LOGIN FUNCTION
-const login = async (req, res) => {
+const login = async (req, res, next) => {
     // retreive user data from req
     const { email, password } = req.body;
     try{
@@ -80,36 +83,38 @@ const login = async (req, res) => {
 
     }catch(error){
         console.error("Error creating user:", error);
-        res.status(500).json({ error: "Username or password incorrect!" });
+        //res.status(500).json({ error: "Username or password incorrect!" });
+        next(error);
     }
 };
 
 //LOGOUT FUNCTION 
-const logout = (req, res) => {
+const logout = (req, res, next) => {
     try {
         // Clear the token cookie
         res.clearCookie('token', { httpOnly: true });
         res.status(200).json({ message: "Logout successful." });
     } catch (error) {
         console.error("Error during logout:", error);
-        res.status(500).json({ error: "Internal server error." });
+        //res.status(500).json({ error: "Internal server error." });
+        next(error);
     }
 };
 
 
 //GET ALL USERS
-const getAllUsers = async (req, res)=>{
+const getAllUsers = async (req, res , next)=>{
     try{
         const users = await User.find();
         res.status(200).json(users);
     }catch(error){
         console.error("Error creating user:", error);
-        res.status(500).json({ error: "Internal server error." });
+        next(error);    
     }
 };
 
 //GET USER BY ID
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id); 
         if (!user) {
@@ -118,12 +123,12 @@ const getUserById = async (req, res) => {
         res.status(200).json(user);
     } catch (error) {
         console.error("Error retrieving user by ID:", error); 
-        res.status(500).json({ error: "Internal server error." });
+        next(error);
     }
 };
 
 //DELETE USER
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
     try{
         const user = await User.findByIdAndDelete(req.params.id);
         if(!user){
@@ -133,12 +138,12 @@ const deleteUser = async (req, res) => {
         res.status(200).json({ message: "User deleted successfully." });
     }catch(error){
         console.error("Error creating user:", error);
-        res.status(500).json({ error: "Internal server error." , user,});
+        next(error);
     }
 };
 
 //UPDATE USER
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
     try{
         const user = await User.findById(req.params.id);
 
@@ -168,7 +173,7 @@ const updateUser = async (req, res) => {
         });
     }catch(error){
         console.error("Error creating user:", error);
-        res.status(500).json({ error: "Internal server error." });
+        next(error);
     }
 };
 

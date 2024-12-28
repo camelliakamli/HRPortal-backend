@@ -1,9 +1,8 @@
-const express = require('express');
 const Document = require('../models/Document');
 const multer = require('multer');
+const fs = require('fs');
 const path = require('path');
-
-
+const createError = require('../utils/error');
 //MULTER CONFIG
 const storage = multer.diskStorage({
     destination: function (req, file, cb) { 
@@ -108,18 +107,29 @@ const getDocumentByID = async (req, res) => {
 }
 
 //Delete Document
+//USING fs TO DELETE THE DOCUMENT FROM DISK ALSO NOT ONLY DB
 const deleteDocument = async (req, res) => {
     try{
         const { id } = req.params;
 
         // Find and delete the document
-        const document = await Document.findByIdAndDelete(id);
+        const document = await Document.findById(id);
 
-        // Check if the document was found and deleted
+        // Check if document exists
         if (!document) {
             return res.status(404).json({ message: 'Document not found' });
         }
 
+        // Delete document from DB
+        await document.remove();
+
+        // Delete the associated file from the file system
+        const filePath = path.join(__dirname, '..', document.file_path);
+        fs.unlinkSync(filePath, (error) => {
+            if (error) {
+                console.error('Error deleteing Document',error);
+            }
+        });
         // Send a success response
         res.status(200).json({ message: 'Document deleted successfully' });
     }catch(error){
@@ -130,4 +140,32 @@ const deleteDocument = async (req, res) => {
 //Distriubute Document
 
 //Archive Document
-module.exports = { uploadDocument, getDocumentsForUser, getAllDocumentsForAdmin ,  getDocumentByID , deleteDocument };
+const archiveDocument = async (req, res) =>{
+    try{
+        const { id } = req.params;
+
+        // Find the document by ID
+        const document = await Document.findById(document_id);
+
+        // Check if the document exists
+        if (!document) {
+            return res.status(404).json({ message: 'Document not found' });
+        }
+
+        // Check if the document is already archived
+        if (document.is_archived) {
+            return res.status(400).json({ message: 'Document is already archived' });
+        }
+
+        // Archive the document by setting the is_archived field to true
+        document.is_archived = true;
+        await document.save();
+
+        res.status(200).json({ message: 'Document archived successfully', document });
+
+    }catch(error){
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+module.exports = { uploadDocument, getDocumentsForUser, getAllDocumentsForAdmin ,  getDocumentByID , deleteDocument ,archiveDocument };

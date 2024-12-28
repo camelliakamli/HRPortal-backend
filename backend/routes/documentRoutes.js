@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const { uploadDocument , getDocumentsForUser, getAllDocumentsForAdmin , getDocumentByID , deleteDocument } = require('../controllers/documentController');
+const { uploadDocument , getDocumentsForUser, getAllDocumentsForAdmin , getDocumentByID , deleteDocument , archiveDocument  } = require('../controllers/documentController');
 
 //MULTER CONFIG
 const storage = multer.diskStorage({
@@ -26,5 +26,7 @@ router.get('/', getAllDocumentsForAdmin);
 router.get('/document/:id', getDocumentByID);
 
 router.delete('/document/:id', deleteDocument); 
+
+router.post('/document/ id/archive', archiveDocument);
 
 module.exports = router;
