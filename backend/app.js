@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors'); // Import the cors middleware
 require('dotenv').config(); 
+
 const userRoutes = require('./routes/userRoutes');
 const documentRoutes = require('./routes/documentRoutes');
 const demandeRoutes = require('./routes/demandeRoutes');
@@ -12,24 +14,31 @@ const Demande = require('./models/Demande');
 const Profile = require('./models/Profile');
 const Role = require('./models/Role');
 
-app.use (express.json()); //middleware to parse the incoming request body
+// Enable CORS for all origins (or customize as needed)
+app.use(cors());
 
-//DATABSE CONNECTION
+// Middleware to parse the incoming request body
+app.use(express.json());
+
+// Database Connection
 mongoose.connect(process.env.DB_URL)
-.then(()=>{
-    console.log("Connected to  DB Successfully");
-}).catch((error)=>{
-    console.log("Connection to DB failed" , error);
-});
+  .then(() => {
+    console.log("Connected to DB Successfully");
+  })
+  .catch((error) => {
+    console.log("Connection to DB failed", error);
+  });
 
-app.get('/', (req, res) =>{
-    res.send('Hello World');
+// Define Routes
+app.get('/', (req, res) => {
+  res.send('Hello World');
 });
 
 app.use('/api/users', userRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/demandes', demandeRoutes);
 
+// Start the Server
 const PORT = process.env.PORT || 8800;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} 🚀`);

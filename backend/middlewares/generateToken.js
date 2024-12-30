@@ -3,12 +3,12 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-async function generateToken(User) {
+async function generateToken(user) {
   // Create a payload with user id, email, and role to be insterted in the token
     const payload = {
-      id: User.id,
-      email: User.email,
-      role: User.role,
+      id: user.id,
+      email: user.email,
+      role: user.role,
     };
   
     const token = await jwt.sign(payload, process.env.JWT_SECRET_KEY, {

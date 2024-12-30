@@ -71,7 +71,8 @@ const login = async (req, res, next) => {
         }
 
         //Validate Password
-        const isPasswordValid = bcrypt.compare(req.body.password, user.password);
+        const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+
         if(!isPasswordValid){
             res.status(400).json({ error: "Invalid password." });
         }
@@ -88,18 +89,18 @@ const login = async (req, res, next) => {
     }
 };
 
-//LOGOUT FUNCTION 
+// LOGOUT FUNCTION 
 const logout = (req, res, next) => {
     try {
-        // Clear the token cookie
-        res.clearCookie('token', { httpOnly: true });
-        res.status(200).json({ message: "Logout successful." });
+      // Clear the token cookie
+      res.clearCookie('token', { httpOnly: true, path: '/' });
+      res.status(200).json({ message: "Logout successful." });
     } catch (error) {
-        console.error("Error during logout:", error);
-        //res.status(500).json({ error: "Internal server error." });
-        next(error);
+      console.error("Error during logout:", error);
+      next(error); 
     }
-};
+  };
+  
 
 
 //GET ALL USERS

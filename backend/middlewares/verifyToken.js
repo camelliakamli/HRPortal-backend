@@ -3,23 +3,26 @@ const createError = require("../utils/error");
 
 // Middleware to verify roles
 const verifyRole = (...requiredRoles) => (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  
-  if (!authHeader) {
-    return next(createError(401, "No token provided"));
-  }
+    // Extract token from headers or cookies
+    const authHeader = req.headers.authorization;
+    const token = authHeader
+        ? authHeader.split(" ")[1] // Get TOKEN from Bearer scheme
+        : req.cookies?.token; // OR GET TOKEN from COOKIE
 
-  const token = authHeader.split(" ")[1];
+    if (!token) {
+        return next(createError(401, "You are not authenticated!"));
+    }
+
   try {
     // Verify JWT token
     const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-    // Check if the user has one of the required roles
+    // Check if user has one of the required roles
     if (!requiredRoles.includes(payload.role)) {
       return next(createError(403, "Forbidden: Access denied"));
     }
 
-    // Attach user info to the request object
+    // USER DATA FROM THE PAYLOAD OF TOKEN
     req.user = payload;
     next();
   } catch (error) {
@@ -28,7 +31,7 @@ const verifyRole = (...requiredRoles) => (req, res, next) => {
   }
 };
 
-// Define separate middleware functions for specific roles
+// Define separate middleware functions for EACH ROLE
 const verifyAdmin = verifyRole("admin");
 const verifyEmployee = verifyRole("employee");
 
