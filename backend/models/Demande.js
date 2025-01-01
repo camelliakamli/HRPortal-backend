@@ -32,4 +32,4 @@ const DemandeSchema = new Schema({
     timestamps: true,
   });
 const Demande = mongoose.model("Demande", DemandeSchema);
-module.exports = mongoose.model("Demande", DemandeSchema);
+module.exports = Demande;

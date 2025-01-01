@@ -12,7 +12,9 @@ const User = require('./models/User');
 const Document = require('./models/Document');
 const Demande = require('./models/Demande');
 const Profile = require('./models/Profile');
-const Role = require('./models/Role');
+const ArchivedDocument = require('./models/ArchivedDocuments');
+const DistributedDocument = require('./models/DistributedDocument');
+const Department = require('./models/Department');
 
 // Enable CORS for all origins (or customize as needed)
 app.use(cors());

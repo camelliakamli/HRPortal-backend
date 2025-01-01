@@ -5,7 +5,8 @@ const { verifyAdmin, verifyEmployee } = require("../middlewares/verifyToken");
 
 // Route to create a new user
 //Protected route to create user only by admin
-router.post("/create-user", verifyAdmin, createUser);  
+router.post("/create-user", createUser);  
+//router.post("/create-user", verifyAdmin, createUser);  
 router.post("/login", login);
 router.post("/logout", logout);
 router.get("/all-users", getAllUsers);
