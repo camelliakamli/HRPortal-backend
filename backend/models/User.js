@@ -43,7 +43,7 @@ const UserSchema = new Schema({
     department: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Department",
-      required: true,
+      
     },
     role: {
       type: String,
@@ -70,18 +70,15 @@ const UserSchema = new Schema({
         type: String,
         required: true,
       },
-      state: {
-        type: String,
-        required: true,
-      },
-      zip_code: {
-        type: String,
-        required: true,
-      },
       country: {
         type: String,
         required: true,
       },
+    },
+    hierarchy_level: {
+      type: Number, // Represents the user's position in the hierarchy (exp : 1 for top-level)
+      default: null, 
+
     },
   }, {
     timestamps: true,

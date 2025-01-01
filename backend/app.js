@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors'); // Import the cors middleware
 require('dotenv').config(); 
-
+const path = require('path');
 const userRoutes = require('./routes/userRoutes');
 const documentRoutes = require('./routes/documentRoutes');
 const demandeRoutes = require('./routes/demandeRoutes');
@@ -21,6 +21,9 @@ app.use(cors());
 
 // Middleware to parse the incoming request body
 app.use(express.json());
+
+// Serve static files from the "uploads" directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Database Connection
 mongoose.connect(process.env.DB_URL)

@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const { generateToken } = require("../middlewares/generateToken");
 const createError = require('../utils/error');
+const Department = require('../models/Department');
 
 //FUNCTION TO CREATE USER 
 const createUser = async (req, res, next) => {
@@ -19,7 +20,9 @@ const createUser = async (req, res, next) => {
             department,
             role,
             gender,
-            hire_date
+            hire_date,
+            address,
+            hierarchy_level = null, 
         } = req.body;
 
         // Validate and parse dates
@@ -43,6 +46,8 @@ const createUser = async (req, res, next) => {
             role,
             gender,
             hire_date: parsedHireDate,
+            address,
+            hierarchy_level, 
         });
 
         // Save user to database

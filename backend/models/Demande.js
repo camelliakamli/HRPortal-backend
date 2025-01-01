@@ -28,6 +28,10 @@ const DemandeSchema = new Schema({
         type: Date, 
         default: Date.now, 
     },
+    duration: { 
+        type: String, 
+        required: true
+    }
 }, {
     timestamps: true,
   });
