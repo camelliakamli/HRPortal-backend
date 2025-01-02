@@ -8,7 +8,7 @@ const createDemande = async (req, res, next) => {
         const { user_id, type, start_date, end_date, duration } = req.body;
 
         // Validate fields
-        if (!user_id || !type || !start_date || !duration) {
+        if (!user_id || !type || !start_date ) {
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
@@ -18,7 +18,7 @@ const createDemande = async (req, res, next) => {
             type,
             start_date,
             end_date,
-            duration, // Include duration in the request body
+            duration, 
         });
 
         const savedDemande = await newDemande.save();
@@ -48,7 +48,13 @@ const getDemandeForUser = async (req, res, next) => {
 // FETCH ALL DEMANDES - FOR ADMIN
 const getAllDemandes = async (req, res, next) => {
     try {
-        const demandes = await Demande.find();
+        const demandes = await Demande.find()
+        .populate('user_id',  'first_name last_name')
+            .exec();
+
+        if (demandes.length === 0) {
+            return res.status(404).json({ message: 'No Requests found' });
+        }
         res.status(200).json(demandes);
     } catch (error) {
         console.error("Error getting Demande:", error);

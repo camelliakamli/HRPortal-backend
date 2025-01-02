@@ -6,63 +6,60 @@ const createError = require('../utils/error');
 const Department = require('../models/Department');
 
 //FUNCTION TO CREATE USER 
-const createUser = async (req, res, next) => {
+const createUser = async (req, res) => {
     try {
-        const {
-            first_name,
-            last_name,
-            date_of_birth,
-            email,
-            password,
-            phone_number,
-            position,
-            salary,
-            department,
-            role,
-            gender,
-            hire_date,
-            address,
-            hierarchy_level = null, 
-        } = req.body;
-
-        // Validate and parse dates
-        const parsedDOB = new Date(date_of_birth);
-        const parsedHireDate = new Date(hire_date);
-
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Create new user instance
-        const newUser = new User({
-            first_name,
-            last_name,
-            date_of_birth: parsedDOB,
-            email,
-            password: hashedPassword,
-            phone_number,
-            position,
-            salary,
-            department,
-            role,
-            gender,
-            hire_date: parsedHireDate,
-            address,
-            hierarchy_level, 
-        });
-
-        // Save user to database
-        const savedUser = await newUser.save();
-        res.status(201).json({
-            message: "User created successfully.",
-            savedUser,
-        });
+      const {
+        first_name,
+        last_name,
+        date_of_birth,
+        email,
+        password,
+        phone_number,
+        position,
+        salary,
+        department,
+        role,
+        gender,
+        hire_date,
+        address,
+        hierarchy_level = null, 
+      } = req.body;
+  
+      console.log(req.body);
+  
+      const parsedDOB = new Date(date_of_birth);
+      const parsedHireDate = new Date(hire_date);
+  
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      const newUser = new User({
+        first_name,
+        last_name,
+        date_of_birth: parsedDOB,
+        email,
+        password: hashedPassword,
+        phone_number,
+        position,
+        salary,
+        department,
+        role,
+        gender,
+        hire_date: parsedHireDate,
+        address,
+        hierarchy_level, 
+      });
+  
+      const savedUser = await newUser.save();
+      res.status(201).json({
+        message: "User created successfully.",
+        savedUser,
+      });
     } catch (error) {
-        console.error("Error creating user:", error);
-        //res.status(500).json({ error: "Internal server error." });
-        next(error);
+      console.error("Error creating user:", error);
+      res.status(500).json({ error: "Internal server error." });
     }
-};
-
+  };
+  
 //LOGIN FUNCTION
 const login = async (req, res, next) => {
     // retreive user data from req

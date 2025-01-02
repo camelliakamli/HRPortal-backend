@@ -30,7 +30,7 @@ const DemandeSchema = new Schema({
     },
     duration: { 
         type: String, 
-        required: true
+       
     }
 }, {
     timestamps: true,
